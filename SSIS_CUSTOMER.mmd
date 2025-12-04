@@ -1,0 +1,110 @@
+graph TD
+    %% Start points
+    A[Existing check CMAI0100 - C21_101 - 001] -->|Record Count > 0| B{Truncate MCPSLCDS - C21_101 - 0002};
+    A -->|Record Count <= 0| G;
+
+    B --> C[Import MCPSLCDS from S21 CMAI0100 - C21_101 - 0003];
+    C --> G[Existing check TBL004 in MTPTBLS - C21_121 - 001];
+    
+    G -->|Record Count > 0| H[Delete TBL004 in MTPTBLS - C21_121 - 0002];
+    H --> I[Import TBL004 from S21 - C21_121 - 0004];
+    
+    G -->|Record Count <= 0| J;
+    I --> J[Check TBL004 MTPTBLS - C21_121 - 0010];
+    
+    J --> K[Delete MTPTBLX - C21_121 - 0012];
+    K --> L[Insert MTPTBLX from MTPTBLS - C21_121 - 0013];
+    L --> M[Update MTPTBLX from MTPTBLW - C21_121 - 0014];
+
+    M --> N[Existing check CMAI0040 C21_071 - 001];
+
+    %% CMAI0040 Flow for MCPADRMS
+    N -->|Record Count > 0| O{Truncate in MCPADRMS - C21_071 - 0002};
+    O --> P[Import MCPADRMS from S21 CMAI0040 - C21_071 - 0004];
+    N -->|Record Count <= 0| Q;
+
+    P --> Q[Existing check CMAI0120 C21_071 - 005];
+    
+    %% CMAI0120 Flow for MCPCSTMS
+    Q -->|Record Count > 0| R{Truncate in MCPCSTMS - C21_071 - 0006};
+    R --> S[Import MCPCSTMS from S21 CMAI0120 - C21_071 - 0007];
+    Q -->|Record Count <= 0| T;
+
+    S --> T[Build XNPSHIP - C21_071 - 0021];
+    T --> U[Truncate table in ORDERDESK - C21_071 - 0022];
+    U --> V[Upload to ORDERDESK - C21_071 - 0023];
+
+    V --> W[Build XNPSOLD - C21_072 - 0031];
+    W --> X[truncate table in ORDERDESK - C21_072 - 0032];
+    X --> Y[Upload to ORDERDESK - C21_072 - 0033];
+
+    Y --> Z[Build XNPBILL - C21_073 - 0041];
+    Z --> AA[Truncate table in ORDERDESK - C21_073 - 0042];
+    AA --> AB[Upload to ORDERDESK - C21_073 - 0043];
+
+    AB --> AC[Build XNPMSLCD - C21_101 - 0051];
+    AC --> AD[Truncate table in ORDERDESK - XNPMSLCD - C21_101 - 0052];
+    AD --> AE[Upload to ORDERDESK - XNPMSLCD - C21_101 - 0053];
+    
+    AE --> AF[Build XNPPRDG - C21_122 - 0061];
+    AF --> AG[Truncate table in ORDERDESK - C21_122 - 0062];
+    AG --> AH[Upload to ORDERDESK XNPPRDG - C21_122 - 0063];
+
+    AH --> AI[Build XNPCMGR - C21_124 - 0071];
+    AI --> AJ[Truncate table in ORDERDESK - C21_124 - 0072];
+    AJ --> AK[Upload to ORDERDESK XNPCMGR - C21_124 - 0073];
+
+    AK --> AL[Build XNPSHPM - C21_125 - 0081];
+    AL --> AM[Truncate table in ORDERDESK - C21_125 - 0082];
+    AM --> AN[Upload to ORDERDESK - C21_125 - 0083];
+
+    AN --> AO[002_10 XNPDEPCD - C21_002 - 0091];
+    AO --> AP[Truncate table in ORDERDESK - C21_002 - 0092];
+    AP --> AQ[Upload to ORDERDESK - C21_002 - 0093];
+
+    %% Error Handler
+    subgraph Error Handler
+        ER[OnError Event]
+        ER --> MAIL[Send Mail Task];
+    end
+
+    style A fill:#ccf,stroke:#333
+    style B fill:#f9f,stroke:#333
+    style C fill:#fcc,stroke:#333
+    style G fill:#ccf,stroke:#333
+    style H fill:#f9f,stroke:#333
+    style I fill:#fcc,stroke:#333
+    style J fill:#f9f,stroke:#333
+    style K fill:#f9f,stroke:#333
+    style L fill:#f9f,stroke:#333
+    style M fill:#f9f,stroke:#333
+    style N fill:#ccf,stroke:#333
+    style O fill:#f9f,stroke:#333
+    style P fill:#fcc,stroke:#333
+    style Q fill:#ccf,stroke:#333
+    style R fill:#f9f,stroke:#333
+    style S fill:#fcc,stroke:#333
+    style T fill:#f9f,stroke:#333
+    style U fill:#f9f,stroke:#333
+    style V fill:#fcc,stroke:#333
+    style W fill:#f9f,stroke:#333
+    style X fill:#f9f,stroke:#333
+    style Y fill:#fcc,stroke:#333
+    style Z fill:#f9f,stroke:#333
+    style AA fill:#f9f,stroke:#333
+    style AB fill:#fcc,stroke:#333
+    style AC fill:#f9f,stroke:#333
+    style AD fill:#f9f,stroke:#333
+    style AE fill:#fcc,stroke:#333
+    style AF fill:#f9f,stroke:#333
+    style AG fill:#f9f,stroke:#333
+    style AH fill:#fcc,stroke:#333
+    style AI fill:#f9f,stroke:#333
+    style AJ fill:#f9f,stroke:#333
+    style AK fill:#fcc,stroke:#333
+    style AL fill:#f9f,stroke:#333
+    style AM fill:#f9f,stroke:#333
+    style AN fill:#fcc,stroke:#333
+    style AO fill:#f9f,stroke:#333
+    style AP fill:#f9f,stroke:#333
+    style AQ fill:#fcc,stroke:#333
